@@ -1,0 +1,42 @@
+﻿@page "/"
+@using Mini_Software_Team_Challenge.Models
+
+<section class="todo">
+    <h3>To-Do List</h3>
+
+    <div class="row">
+        <input class="text" @bind="newTask" placeholder="Enter a new task" />
+        <button class="btn" @onclick="AddTask">Add Task</button>
+    </div>
+
+    <ul class="list">
+        @foreach (var task in tasks)
+        {
+            <li class="item">
+                <input type="checkbox" @bind="task.IsCompleted" />
+                <span style="@(task.IsCompleted ? "text-decoration: line-through;" : "")">@task.Description</span>
+                <button class="btn danger" @onclick="() => RemoveTask(task)">Remove</button>
+            </li>
+        }
+    </ul>
+</section>
+
+@code {
+    private string newTask = string.Empty;
+    private readonly List<ToDoItem> tasks = new();
+
+    private void AddTask()
+    {
+        var title = newTask.Trim();
+        if (!string.IsNullOrEmpty(title))
+        {
+            tasks.Add(new ToDoItem { Description = title, IsCompleted = false });
+            newTask = string.Empty;
+        }
+    }
+
+    private void RemoveTask(ToDoItem task)
+    {
+        tasks.Remove(task);
+    }
+}
