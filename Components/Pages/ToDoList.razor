@@ -1,0 +1,91 @@
+﻿@page "/"
+@using Mini_Software_Team_Challenge.Models
+
+<section class="todo">
+    <h3>To-Do List</h3>
+
+    <div class="row">
+        <input class="text" @bind="newTask" placeholder="Enter a new task" />
+        <button class="btn" @onclick="AddTask">Add Task</button>
+    </div>
+
+    <ul class="list">
+        @foreach (var task in tasks)
+        {
+            <li class="item">
+                <input type="checkbox" @bind="task.IsCompleted" />
+                <span style="@(task.IsCompleted ? "text-decoration: line-through;" : "")">@task.Description</span>
+                <button class="btn danger" @onclick="() => RemoveTask(task)">Remove</button>
+            </li>
+        }
+    </ul>
+</section>
+<style>
+    .todo {
+        max-width: 400px;
+        margin: auto;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .text {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+        .btn.danger {
+            background-color: #dc3545;
+        }
+
+    .list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+</style>
+
+@code {
+    private string newTask = string.Empty;
+    private readonly List<ToDoItem> tasks = new();
+
+    private void AddTask()
+    {
+        var title = newTask.Trim();
+        if (!string.IsNullOrEmpty(title))
+        {
+            tasks.Add(new ToDoItem { Description = title, IsCompleted = false });
+            newTask = string.Empty;
+        }
+    }
+
+    private void RemoveTask(ToDoItem task)
+    {
+        tasks.Remove(task);
+    }
+}
